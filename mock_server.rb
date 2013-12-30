@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require './loader'
+require 'sinatra/cookies'
 
 module Momo
 	class OptionParser
@@ -18,7 +19,13 @@ module Momo
 			@options['response']['content'] = response_content
 			@options['response']['status'] = response_status
 			@options['redirect'] = redirect
+			@options['cookies'] = cookies
+
 			@options
+		end
+
+		def cookies
+			@data['response']['cookies'] || @data['request']['cookies'] || nil
 		end
 
 		def redirect
@@ -49,7 +56,7 @@ module Momo
 		end #uri
 
 		def method
-			@data['request']['method'].to_sym || :get
+			@data['request']['method'].to_sym rescue :get
 		end
 
 		def params
@@ -64,6 +71,8 @@ module Momo
 end #Momo
 
 class MockServer < Sinatra::Base
+	helpers Sinatra::Cookies
+
 	data = Momo::Loader.new.parse
 	op = Momo::OptionParser.new(data).do
 
@@ -81,6 +90,11 @@ class MockServer < Sinatra::Base
 
 		status op['response']['status']
 		headers op['response']['headers'] if op['response']['headers']
+		if op['cookies'] && op['cookies'].is_a?(Hash)	
+			op['cookies'].each do |k, v|
+				cookies[k.to_sym] = v
+			end #each
+		end #if
 
 		if op['response']['content']['type'] == 'text' and direct_return
 			return op['response']['content']['value']
