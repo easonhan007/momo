@@ -21,8 +21,18 @@ module Momo
 			@options['response']['status'] = response_status
 			@options['redirect'] = redirect
 			@options['cookies'] = cookies
+			@options['latency'] = latency
+			@options['condition'] = condition
 
 			@options
+		end
+
+		def condition
+			@data['request']['condition']  || {}
+		end
+
+		def latency
+			@data['response']['latency']
 		end
 
 		def form
@@ -82,7 +92,7 @@ class MockServer < Sinatra::Base
 	data = Momo::Loader.new.parse
 	op = Momo::OptionParser.new(data).do
 
-	send(op['method'], op['uri'])  do
+	send(op['method'], op['uri'], op['condition'])  do
 		direct_return = true
 		redirect(op['redirect']) and return if op['redirect']
 		
@@ -102,13 +112,22 @@ class MockServer < Sinatra::Base
 			end #each
 		end #if
 
-		if op['response']['content']['type'] == 'text' and direct_return
-			return op['response']['content']['value']
-		end #if
+		output = case op['response']['content']['type'] 
+		when 'text'
+			op['response']['content']['value']
+		when 'file'
+			erb(op['response']['content']['value'])
+		when 'json'
+			content_type :json	
+			op['response']['content']['value']
+		when 'xml'
+			content_type 'text/xml'
+			op['response']['content']['value']
+		end #case
 
-		if op['response']['content']['type'] == 'file' and direct_return
-			return erb(op['response']['content']['value'])
-		end #if
+		sleep(op['latency'].to_i) if op['latency']
+
+		return output if direct_return	
 
 	end
 	run! if app_file == $0
