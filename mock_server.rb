@@ -15,6 +15,7 @@ module Momo
 			@options['uri']  = uri
 			@options['method']  = method
 			@options['params']  = params
+			@options['form']  = form
 			@options['response']['headers']  = response_header
 			@options['response']['content'] = response_content
 			@options['response']['status'] = response_status
@@ -24,12 +25,16 @@ module Momo
 			@options
 		end
 
+		def form
+			@data['request']['form'] 
+		end
+
 		def cookies
 			@data['response']['cookies'] || @data['request']['cookies'] || nil
 		end
 
 		def redirect
-			@data['redirectTo'] || ''
+			@data['redirectTo']
 		end
 
 		def response_content
@@ -60,11 +65,11 @@ module Momo
 		end
 
 		def params
-			@data['request']['params'] || ''
+			@data['request']['params']
 		end
 
 		def response_header
-			@data['request']['headers'] || nil
+			@data['request']['headers']
 		end
 
 	end #OptionParser
@@ -72,14 +77,15 @@ end #Momo
 
 class MockServer < Sinatra::Base
 	helpers Sinatra::Cookies
+	enable :logging
 
 	data = Momo::Loader.new.parse
 	op = Momo::OptionParser.new(data).do
 
 	send(op['method'], op['uri'])  do
+		direct_return = true
 		redirect(op['redirect']) and return if op['redirect']
 		
-		direct_return = true
 		if(op['params'])
 			direct_return = false if op['params'] != params
 		end #if	
@@ -105,6 +111,5 @@ class MockServer < Sinatra::Base
 		end #if
 
 	end
-	
 	run! if app_file == $0
 end
