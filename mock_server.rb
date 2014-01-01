@@ -91,7 +91,6 @@ class MockServer < Sinatra::Base
 
 	data = Momo::Loader.new.parse
 	data = [data] unless data.is_a?(Array) 
-	puts data
 
 	data.each do |d|
 		op = Momo::OptionParser.new(d).parse
@@ -100,7 +99,8 @@ class MockServer < Sinatra::Base
 			redirect(op['redirect']) and return if op['redirect']
 			
 			if(op['params'])
-				direct_return = false if op['params'] != params
+				params_hash= params.to_hash
+				direct_return = false if op['params'] != params_hash
 			end #if	
 
 			if op['method'] == :post and op['form']
