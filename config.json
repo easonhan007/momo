@@ -1,11 +1,50 @@
-{
-  "request" :
-    {
-      "uri" : "/foo"
-    },
-  "response" :
-    {
-      "text" : "bar"
-    }
-}
+[
+	{
+	  "request" :
+	    {
+	      "uri" : "/foo"
+	    },
+	  "response" :
+	    {
+	      "text" : "bar"
+	    }
+	},
 
+	{
+	  "request" :
+	    {
+	      "uri" : "/foo/bar"
+	    },
+	  "response" :
+	    {
+	      "text" : "foo.bar"
+	    }
+	},
+
+	{
+	  "request" :
+	    {
+	      "uri" : "/foo/bar/whatever"
+	    },
+	  "response" :
+	    {
+	      "text" : "foo.bar.whatever"
+	    }
+	},
+
+	{
+		"request" :
+	    {
+	      "uri" : "/params",
+	      "queries" : 
+	        {
+	          "params" : "blah"
+	        }
+	    },
+	  "response" :
+	    {
+	      "text" : "bar"
+	    }
+	}
+
+]

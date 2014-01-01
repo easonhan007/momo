@@ -1,9 +1,9 @@
 require 'json'
 module Momo
 	class Loader
+
 		def initialize(config_file_path=nil)
-			##@file_path = config_file_path || './config.json' 
-			@file_path = './config.json' 
+			@file_path = config_file_path || './config.json'
 		end #initialzie
 
 		def parse

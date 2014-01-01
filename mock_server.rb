@@ -11,7 +11,7 @@ module Momo
 			@data = data
 		end		
 
-		def do
+		def parse
 			@options['uri']  = uri
 			@options['method']  = method
 			@options['params']  = params
@@ -75,7 +75,7 @@ module Momo
 		end
 
 		def params
-			@data['request']['params']
+			@data['request']['queries']['params'] rescue nil
 		end
 
 		def response_header
@@ -90,45 +90,50 @@ class MockServer < Sinatra::Base
 	enable :logging
 
 	data = Momo::Loader.new.parse
-	op = Momo::OptionParser.new(data).do
+	data = [data] unless data.is_a?(Array) 
+	puts data
 
-	send(op['method'], op['uri'], op['condition'])  do
-		direct_return = true
-		redirect(op['redirect']) and return if op['redirect']
-		
-		if(op['params'])
-			direct_return = false if op['params'] != params
-		end #if	
+	data.each do |d|
+		op = Momo::OptionParser.new(d).parse
+		send(op['method'], op['uri'], op['condition'])  do
+			direct_return = true
+			redirect(op['redirect']) and return if op['redirect']
+			
+			if(op['params'])
+				direct_return = false if op['params'] != params
+			end #if	
 
-		if op['method'] == :post and op['form']
-			direct_return = false if op['form'] != params
-		end
+			if op['method'] == :post and op['form']
+				direct_return = false if op['form'] != params
+			end
 
-		status op['response']['status']
-		headers op['response']['headers'] if op['response']['headers']
-		if op['cookies'] && op['cookies'].is_a?(Hash)	
-			op['cookies'].each do |k, v|
-				cookies[k.to_sym] = v
-			end #each
-		end #if
+			status op['response']['status']
+			headers op['response']['headers'] if op['response']['headers']
+			if op['cookies'] && op['cookies'].is_a?(Hash)	
+				op['cookies'].each do |k, v|
+					cookies[k.to_sym] = v
+				end #each
+			end #if
 
-		output = case op['response']['content']['type'] 
-		when 'text'
-			op['response']['content']['value']
-		when 'file'
-			erb(op['response']['content']['value'])
-		when 'json'
-			content_type :json	
-			op['response']['content']['value']
-		when 'xml'
-			content_type 'text/xml'
-			op['response']['content']['value']
-		end #case
+			output = case op['response']['content']['type'] 
+			when 'text'
+				op['response']['content']['value']
+			when 'file'
+				erb(op['response']['content']['value'])
+			when 'json'
+				content_type :json	
+				op['response']['content']['value']
+			when 'xml'
+				content_type 'text/xml'
+				op['response']['content']['value']
+			end #case
 
-		sleep(op['latency'].to_i) if op['latency']
+			sleep(op['latency'].to_i) if op['latency']
 
-		return output if direct_return	
+			return output if direct_return	
 
-	end
+		end #send
+	end #each
+
 	run! if app_file == $0
 end
