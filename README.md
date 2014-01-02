@@ -8,13 +8,66 @@ Another mock server framework using sinatra and ruby
 
 * git clone
 
+* bundle
+
 * modify config.json
 
 * ruby mock_server.rb
 
-* have fun!
-
+* access localhost:4567/foo and have fun
 
 ### API
 
-[Here](https://github.com/dreamhead/moco/edit/master/moco-doc/apis.md), suport most moco api
+Request
+=======
+
+### URI
+
+Define routes in config.json like this:
+
+```
+[
+	{
+	  "request" :
+	    {
+	      "uri" : "/foo"
+	    },
+	  "response" :
+	    {
+	      "text" : "bar"
+	    }
+	},
+
+	{
+	  "request" :
+	    {
+	      "uri" : "/foo/bar"
+	    },
+	  "response" :
+	    {
+	      "text" : "foo.bar"
+	    }
+	},
+
+	{
+	  "request" :
+	    {
+	      "uri" : "/foo/bar/whatever"
+	    },
+	  "response" :
+	    {
+	      "text" : "foo.bar.whatever"
+	    }
+	}
+]
+```
+
+This json will define 3 routes.
+
+* /foo
+* /foo/bar
+* /foo/bar/whatever
+
+You can access via localhost:4567/foo or localhost:4567/foo/bar
+
+
