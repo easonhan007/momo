@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require './loader'
+require './user_define'
 
 module Momo
 	class OptionParser
