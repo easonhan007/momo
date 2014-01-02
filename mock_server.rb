@@ -36,7 +36,7 @@ module Momo
 		end
 
 		def form
-			@data['request']['form'] 
+			@data['request']['forms'] 
 		end
 
 		def cookies
