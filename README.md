@@ -115,3 +115,57 @@ Define params with value like this
 ]	
 ```
 
+### Method
+
+You can define restful routes just like this 
+
+```
+[
+	{
+		"request" :
+	    {
+	      "uri" : "/simple_get"
+	    },
+	  "response" :
+	    {
+	      "text" : "simple get"
+	    }
+	},
+
+	{
+		"request" :
+	    {
+	      "uri" : "/simple_post",
+	      "method" : "post"
+	    },
+	  "response" :
+	    {
+	      "text" : "simple post"
+	    }
+	},
+
+	{
+		"request" :
+	    {
+	      "uri" : "/simple_put",
+	      "method" : "put"
+	    },
+	  "response" :
+	    {
+	      "text" : "simple put"
+	    }
+	}, 
+
+	{
+		"request" :
+	    {
+	      "uri" : "/simple_delete",
+	      "method" : "delete"
+	    },
+	  "response" :
+	    {
+	      "text" : "simple delete"
+	    }
+	} 
+]
+```

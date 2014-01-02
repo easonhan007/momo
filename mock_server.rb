@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require './loader'
-require 'sinatra/cookies'
 
 module Momo
 	class OptionParser
@@ -86,7 +85,6 @@ module Momo
 end #Momo
 
 class MockServer < Sinatra::Base
-	helpers Sinatra::Cookies
 	enable :logging
 
 	data = Momo::Loader.new.parse
@@ -111,7 +109,7 @@ class MockServer < Sinatra::Base
 			headers op['response']['headers'] if op['response']['headers']
 			if op['cookies'] && op['cookies'].is_a?(Hash)	
 				op['cookies'].each do |k, v|
-					cookies[k.to_sym] = v
+					response.set_cookie(k, value: v, domain: '', path: '/')
 				end #each
 			end #if
 

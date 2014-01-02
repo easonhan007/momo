@@ -137,5 +137,18 @@
 	    {
 	      "text" : "simple delete"
 	    }
+	} ,
+
+	{
+		"request" :
+	    {
+	      "uri" : "/cookie",
+	      "method" : "get",
+	      "cookies" : {"foo" : "bar"}
+	    },
+	  "response" :
+	    {
+	      "text" : "cookie"
+	    }
 	} 
 ]

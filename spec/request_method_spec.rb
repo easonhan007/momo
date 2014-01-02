@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'request::params' do 
+describe 'request::method' do 
 
 	it 'should get successfully' do
 		get('/simple_get')
