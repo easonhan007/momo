@@ -38,7 +38,52 @@
 	      "uri" : "/params",
 	      "queries" : 
 	        {
-	          "params" : "blah"
+	          "params" : {"blah": null}
+	        }
+	    },
+	  "response" :
+	    {
+	      "text" : "bar"
+	    }
+	},
+
+	{
+		"request" :
+	    {
+	      "uri" : "/multi_params",
+	      "queries" : 
+	        {
+	          "params" : {"foo": null, "bar": null}
+	        }
+	    },
+	  "response" :
+	    {
+	      "text" : "foo.bar"
+	    }
+	},
+
+	{
+		"request" :
+	    {
+	      "uri" : "/params_with_value",
+	      "queries" : 
+	        {
+	          "params" : {"key": "value"}
+	        }
+	    },
+	  "response" :
+	    {
+	      "text" : "bar"
+	    }
+	},
+
+	{
+		"request" :
+	    {
+	      "uri" : "/multi_params_with_value",
+	      "queries" : 
+	        {
+	          "params" : {"key": "value", "another" : "value"}
 	        }
 	    },
 	  "response" :
