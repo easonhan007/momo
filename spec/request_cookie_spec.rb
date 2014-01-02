@@ -6,6 +6,7 @@ describe 'request::cookies' do
 		get('/cookie')
 		expect(last_response).to be_ok
 		expect(last_response.body).to eql('cookie')
+		expect(rack_mock_session.cookie_jar['foo']).to eql('bar')
 		# expect(last_request.cookies).to eql({ 'foo'=> 'bar' })
 		# expect(last_response.cookies).to eql({ 'foo'=> 'bar' })
 	end
