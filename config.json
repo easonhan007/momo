@@ -150,5 +150,31 @@
 	    {
 	      "text" : "cookie"
 	    }
+	},
+
+	{
+		"request" :
+	    {
+	      "uri" : "/form",
+	      "method" : "post",
+	      "forms" : {"foo" : "bar"}
+	    },
+	  "response" :
+	    {
+	      "text" : "form"
+	    }
+	} , 
+	{
+		"request" :
+	    {
+	      "uri" : "/form_with_params",
+	      "method" : "post",
+	      "forms" : {"key" : "value"},
+	      "params" : {"foo" : "bar"}
+	    },
+	  "response" :
+	    {
+	      "text" : "form"
+	    }
 	} 
 ]
