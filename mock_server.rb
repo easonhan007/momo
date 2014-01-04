@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require './loader'
-require './user_define'
+# require './user_define'
 
 module Momo
 	class OptionParser
@@ -97,13 +97,22 @@ class MockServer < Sinatra::Base
 			direct_return = true
 			redirect(op['redirect']) and return if op['redirect']
 			
-			if(op['params'])
+			if(op['method'] == :get and op['params'])
 				params_hash= params.to_hash
 				direct_return = false if op['params'] != params_hash
 			end #if	
 
-			if op['method'] == :post and op['form']
-				direct_return = false if op['form'] != params
+			if [:post, :put].include?(op['method']) and op['form']
+				if(op['params'] and op['params'].is_a?(Hash))
+					# direct_return = false unless (params - op['params']) == op['form']
+					get_params = {}
+					op['params'].each do |k, v|
+						get_params[k] = params.delete(k)
+					end #each
+					direct_return = false unless get_params == op['params'] && op['form'] == params
+				else
+					direct_return = false unless op['form'] == params
+				end #if
 			end
 
 			status op['response']['status']

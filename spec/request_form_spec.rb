@@ -16,7 +16,7 @@ describe 'request::form' do
 	end
 
 	it 'should work well when post with form and ? params' do
-		post('/form_with_params?foo=bar', {'key' => 'value'})
+		post('/form_with_params', {'key' => 'value', 'foo' => 'bar'})
 		expect(last_response).to be_ok
 		expect(last_response.body).to eql('form')
 	end

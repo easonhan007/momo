@@ -4,4 +4,5 @@ class MockServer < Sinatra::Base
 			# return 'foo.bar' if params['foo'] == 'bar'
 			# return 'hello.world' if params['hello'] == 'world'
 	# end
+	run! if app_file == $0
 end

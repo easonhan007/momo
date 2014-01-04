@@ -170,7 +170,9 @@
 	      "uri" : "/form_with_params",
 	      "method" : "post",
 	      "forms" : {"key" : "value"},
-	      "params" : {"foo" : "bar"}
+	      "queries": {
+	      	"params" : {"foo" : "bar"}
+	      }
 	    },
 	  "response" :
 	    {
