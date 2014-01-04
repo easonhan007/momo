@@ -192,5 +192,20 @@
 	    {
 	      "text" : "header"
 	    }
+	}, 
+
+	{
+		"request" :
+	    {
+	      "uri" : "/post_json_text",
+	      "method" : "post",
+	      "text": {
+	      	"json" : "{\"foo\":\"bar\"}"	
+	      }
+	    },
+	  "response" :
+	    {
+	      "text" : "post json text"
+	    }
 	} 
 ]

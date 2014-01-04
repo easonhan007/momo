@@ -22,8 +22,26 @@ module Momo
 			@options['cookies'] = cookies
 			@options['latency'] = latency
 			@options['condition'] = condition
+			@options['post_json_text'] = post_json_text
+			@options['post_json_file'] = post_json_file
 
 			@options
+		end
+
+		def post_json_text
+			json_data = @data['request']['text']['json'] rescue nil
+			make_request_method_to_post(json_data)
+			json_data
+		end
+
+		def post_json_file
+			json_data = @data['request']['file']['json'] rescue nil
+			make_request_method_to_post(json_data)
+			json_data
+		end
+
+		def make_request_method_to_post(json_data)
+			@options['method'] = :post if (json_data and [:get, :delete].include?(@options['method']))
 		end
 
 		def condition
@@ -96,11 +114,13 @@ class MockServer < Sinatra::Base
 			direct_return = true
 			redirect(op['redirect']) and return if op['redirect']
 			
+			# handle get method with params
 			if(op['method'] == :get and op['params'])
 				params_hash= params.to_hash
 				direct_return = false if op['params'] != params_hash
 			end #if	
 
+			# handle post or put method with form and params
 			if [:post, :put].include?(op['method']) and op['form']
 				if(op['params'] and op['params'].is_a?(Hash))
 					# direct_return = false unless (params - op['params']) == op['form']
@@ -114,7 +134,23 @@ class MockServer < Sinatra::Base
 				end #if
 			end
 
+			# handle post json
+			if op['post_json_text']
+				puts op['post_json_text']
+				direct_return = false unless JSON.parse(op['post_json_text']) == JSON.parse(request.env["rack.input"].read)
+			end #if
+
+			if op['post_json_file']
+				halt(404, "#{op['post_json_file']} does not exist") unless File.exist?(op['post_json_file'])
+				unless Momo::Loader.new(op['post_json_file']).parse == JSON.parse(request.env["rack.input"].read)
+					direct_return = false 
+				end #unless
+			end #if
+
+			# handle response status
 			status op['response']['status']
+
+			#handle cookies
 			headers op['response']['headers'] if op['response']['headers']
 			if op['cookies'] && op['cookies'].is_a?(Hash)	
 				op['cookies'].each do |k, v|
@@ -122,6 +158,7 @@ class MockServer < Sinatra::Base
 				end #each
 			end #if
 
+			# handle output
 			output = case op['response']['content']['type'] 
 			when 'text'
 				op['response']['content']['value']
