@@ -207,5 +207,16 @@
 	    {
 	      "text" : "post json text"
 	    }
+	} ,
+
+	{
+		"request" :
+	    {
+	      "uri" : "%r[/regexp(\\d)]"
+	    },
+	  "response" :
+	    {
+	      "text" : "params['captures']"
+	    }
 	} 
 ]

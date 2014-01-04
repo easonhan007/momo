@@ -84,6 +84,9 @@ module Momo
 		end
 
 		def uri
+			if @data['request']['uri'] and @data['request']['uri'].include?('%r')
+				@data['request']['uri'] = eval(@data['request']['uri'])
+			end #if
 			@data['request']['uri'] || '/'
 		end #uri
 
@@ -110,6 +113,11 @@ class MockServer < Sinatra::Base
 
 	data.each do |d|
 		op = Momo::OptionParser.new(d).parse
+		if ENV['RACK_ENV'] == 'test'
+			print op['method']
+			puts " #{op['uri']}"
+			puts op['uri'].class
+		end #if
 		send(op['method'], op['uri'], op['condition'])  do
 			direct_return = true
 			redirect(op['redirect']) and return if op['redirect']
@@ -136,7 +144,6 @@ class MockServer < Sinatra::Base
 
 			# handle post json
 			if op['post_json_text']
-				puts op['post_json_text']
 				direct_return = false unless JSON.parse(op['post_json_text']) == JSON.parse(request.env["rack.input"].read)
 			end #if
 
@@ -174,6 +181,7 @@ class MockServer < Sinatra::Base
 
 			sleep(op['latency'].to_i) if op['latency']
 
+			output = eval(output) if output.include?('params')
 			return output if direct_return	
 
 		end #send
