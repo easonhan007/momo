@@ -178,5 +178,19 @@
 	    {
 	      "text" : "form"
 	    }
+	} ,
+
+	{
+		"request" :
+	    {
+	      "uri" : "/header",
+	      "headers": {
+	      	"content-type" : "application/json"	
+	      }
+	    },
+	  "response" :
+	    {
+	      "text" : "header"
+	    }
 	} 
 ]
