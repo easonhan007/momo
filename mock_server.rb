@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require './loader'
-# require './user_define'
 
 module Momo
 	class OptionParser
@@ -142,6 +141,8 @@ class MockServer < Sinatra::Base
 
 		end #send
 	end #each
+	
+	require './user_define'
 
 	run! if app_file == $0
 end
