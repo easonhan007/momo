@@ -49,7 +49,7 @@ module Momo
 		end
 
 		def latency
-			@data['response']['latency']
+			@data['response']['latency'] rescue nil
 		end
 
 		def form
@@ -57,7 +57,7 @@ module Momo
 		end
 
 		def cookies
-			@data['response']['cookies'] || @data['request']['cookies'] || nil
+			@data['response']['cookies']  rescue nil
 		end
 
 		def redirect
@@ -65,22 +65,24 @@ module Momo
 		end
 
 		def response_content
-			content = {}
-			if @data['response']['text']
-				content['type'] = 'text'
-				content['value'] = @data['response']['text']
-			end #if
+			if @data['response']
+				content = {}
+				if @data['response']['text']
+					content['type'] = 'text'
+					content['value'] = @data['response']['text']
+				end #if
 
-			if @data['response']['file']
-				content['type'] = 'file'
-				content['value'] = @data['response']['file']
-			end #if
+				if @data['response']['file']
+					content['type'] = 'file'
+					content['value'] = @data['response']['file']
+				end #if
 
-			content
+				content
+			end #if
 		end
 
 		def response_status
-			@data['response']['status'] || 200
+			@data['response']['status'] || 200 if @data['response']
 		end
 
 		def uri
@@ -99,7 +101,7 @@ module Momo
 		end
 
 		def response_header
-			@data['request']['headers']
+			@data['response']['headers'] rescue nil
 		end
 
 	end #OptionParser
@@ -120,7 +122,7 @@ class MockServer < Sinatra::Base
 		end #if
 		send(op['method'], op['uri'], op['condition'])  do
 			direct_return = true
-			redirect(op['redirect']) and return if op['redirect']
+			redirect(op['redirect']) if op['redirect']
 			
 			# handle get method with params
 			if(op['method'] == :get and op['params'])

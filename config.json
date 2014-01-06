@@ -143,12 +143,12 @@
 		"request" :
 	    {
 	      "uri" : "/cookie",
-	      "method" : "get",
-	      "cookies" : {"foo" : "bar"}
+	      "method" : "get"
 	    },
 	  "response" :
 	    {
-	      "text" : "cookie"
+	      "text" : "cookie",
+	      "cookies" : {"foo" : "bar"}
 	    }
 	},
 
@@ -183,14 +183,14 @@
 	{
 		"request" :
 	    {
-	      "uri" : "/header",
-	      "headers": {
-	      	"content-type" : "application/json"	
-	      }
+	      "uri" : "/header"
 	    },
 	  "response" :
 	    {
-	      "text" : "header"
+	      "text" : "header",
+	      "headers": {
+	      	"content-type" : "application/json"	
+	      }
 	    }
 	}, 
 
@@ -218,5 +218,13 @@
 	    {
 	      "text" : "params['captures']"
 	    }
+	}, 
+
+	{
+		"request" :
+	    {
+	      "uri" : "/redirect"
+	    },
+	  "redirectTo" : "http://www.github.com"
 	} 
 ]

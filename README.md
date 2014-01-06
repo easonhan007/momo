@@ -71,7 +71,7 @@ This json will define 3 routes.
 
 You can access via localhost:4567/foo or localhost:4567/foo/bar
 
-### Params
+### Query Params
 
 You can define routes with params like this 
 ```
@@ -115,7 +115,7 @@ Define params with value like this
 ]	
 ```
 
-### Method
+### HTTP Method
 
 You can define restful routes just like this 
 
@@ -169,3 +169,130 @@ You can define restful routes just like this
 	} 
 ]
 ```
+
+### Header
+
+```
+{
+	"request" :
+		{
+			"uri" : "/header"
+		},
+	"response" :
+		{
+			"text" : "header",
+			"headers": {
+				"content-type" : "application/json"	
+			}
+		}
+} 
+```
+
+### Redirect
+Redirect is a common case for normal web development. We can simply redirect a request to different url.
+
+```
+{
+	"request" :
+		{
+			"uri" : "/redirect"
+		},
+	"redirectTo" : "http://www.github.com"
+} 
+```
+
+### Form
+In web development, form is often used to submit information to server side.
+```
+{
+	"request" :
+		{
+			"uri" : "/form",
+			"method" : "post",
+			"forms" : {"foo" : "bar"}
+		},
+	"response" :
+		{
+			"text" : "form"
+		}
+} 
+```
+
+You can also use both query params and form data.
+
+```
+	{
+		"request" :
+	    {
+	      "uri" : "/form_with_params",
+	      "method" : "post",
+	      "forms" : {"key" : "value"},
+	      "queries": {
+	      	"params" : {"foo" : "bar"}
+	      }
+	    },
+	  "response" :
+	    {
+	      "text" : "form"
+	    }
+	} ,
+```
+
+### JSON Request
+Json is rising with RESTful style architecture. Just like XML, in the most case, only JSON structure is important, so json operator can be used.
+
+```
+	{
+		"request" :
+	    {
+	      "uri" : "/post_json_text",
+	      "method" : "post",
+	      "text": {
+	      	"json" : "{\"foo\":\"bar\"}"	
+	      }
+	    },
+	  "response" :
+	    {
+	      "text" : "post json text"
+	    }
+	} 
+```
+#### NOTE: Please escape the quote in text.
+
+The large request can be put into a file:
+```
+{
+  "request": 
+    {
+      "uri": "/json",
+      "file": 
+        {
+          "json": "your_file.json"
+        }
+    },
+  "response": 
+    {
+      "text": "foo"
+    }
+}
+```
+#### NOTE: your json file path should be absolute.
+
+### Matcher
+
+You can define your request uri as a regexp using the ruby %r[] syntax.
+
+```
+	{
+		"request" :
+	    {
+	      "uri" : "%r[/regexp(\\d)]"
+	    },
+	  "response" :
+	    {
+	      "text" : "params['captures']"
+	    }
+	} 
+```
+#### Note: if hte return text contains string like params, momo just eval it. So you can use params['captures'] to fetch the regexp mathers.
+
