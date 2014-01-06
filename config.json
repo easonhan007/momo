@@ -226,5 +226,48 @@
 	      "uri" : "/redirect"
 	    },
 	  "redirectTo" : "http://www.github.com"
+	}, 
+
+	{
+		"request" :
+	    {
+	      "uri" : "/erb"
+	    },
+	  "response" :
+	    {
+	      "file" : "bar"
+	    }
+	},  
+
+	{
+		"request" :
+	    {
+	      "uri" : "/status_300"
+	    },
+	  "response" :
+	    {
+	      "text" : "status 300",
+				"status": "300"
+	    }
+	},  
+	{
+		"request" :
+	    {
+	      "uri" : "/return_json"
+	    },
+	  "response" :
+	    {
+				"json" : "{\"foo\":\"bar\"}"	
+	    }
+	}, 
+	{
+		"request" :
+	    {
+	      "uri" : "/return_xml"
+	    },
+	  "response" :
+	    {
+				"xml" : "<name>momo</name><type>mock server</type>"	
+	    }
 	} 
 ]

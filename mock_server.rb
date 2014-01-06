@@ -77,6 +77,16 @@ module Momo
 					content['value'] = @data['response']['file']
 				end #if
 
+				if @data['response']['json']
+					content['type'] = 'json'
+					content['value'] = @data['response']['json']
+				end #if
+				
+				if @data['response']['xml']
+					content['type'] = 'xml'
+					content['value'] = @data['response']['xml']
+				end #if
+
 				content
 			end #if
 		end
@@ -157,7 +167,7 @@ class MockServer < Sinatra::Base
 			end #if
 
 			# handle response status
-			status op['response']['status']
+			status op['response']['status'] if op['response']['status']
 
 			#handle cookies
 			headers op['response']['headers'] if op['response']['headers']
@@ -172,7 +182,7 @@ class MockServer < Sinatra::Base
 			when 'text'
 				op['response']['content']['value']
 			when 'file'
-				erb(op['response']['content']['value'])
+				erb(op['response']['content']['value'].to_sym)
 			when 'json'
 				content_type :json	
 				op['response']['content']['value']
@@ -183,7 +193,7 @@ class MockServer < Sinatra::Base
 
 			sleep(op['latency'].to_i) if op['latency']
 
-			output = eval(output) if output.include?('params')
+			output = eval(output) if output and output.include?('params')
 			return output if direct_return	
 
 		end #send

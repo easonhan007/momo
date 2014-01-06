@@ -296,3 +296,145 @@ You can define your request uri as a regexp using the ruby %r[] syntax.
 ```
 #### Note: if hte return text contains string like params, momo just eval it. So you can use params['captures'] to fetch the regexp mathers.
 
+---------------------------------------
+
+Request
+--------
+
+### Content
+As you have seen in previous example, response with content is pretty easy.
+
+```
+{
+	"request" :
+		{
+			"uri" : "/foo"
+		},
+	"response" :
+		{
+			"text" : "bar"
+		}
+} 
+```
+
+If you want make the response more flexable, you can use erb template.Note, you should  place your erb file in views dirctory.
+
+```
+{
+	"request" :
+		{
+			"uri" : "/foo"
+		},
+	"response" :
+		{
+			"file" : "bar"
+		}
+} 
+```
+The above response will render erb template views/bar.erb. 
+
+It is very common to return json and xml with correct header. Momo allow you to do this.
+
+```
+{
+	"request" :
+		{
+			"uri" : "/return_json"
+		},
+	"response" :
+		{
+			"json" : "{\"foo\":\"bar\"}"	
+		}
+}, 
+{
+	"request" :
+		{
+			"uri" : "/return_xml"
+		},
+	"response" :
+		{
+			"xml" : "<name>momo</name><type>mock server</type>"	
+		}
+} 
+```
+
+### Status Code
+Momo also supports HTTP status code response.
+```
+{
+	"request" :
+		{
+			"uri" : "/status_300"
+		},
+	"response" :
+		{
+			"text" : "status 300",
+			"status": "300"
+		}
+} 
+```
+
+### Header
+We can also specify HTTP header in response.
+
+```
+{
+	"request" :
+		{
+			"uri" : "/header"
+		},
+	"response" :
+		{
+			"text" : "header",
+			"headers": {
+				"content-type" : "application/json"	
+			}
+		}
+} 
+```
+
+### Redirect
+Redirect is a common case for normal web development. We can simply redirect a request to different url.
+```
+{
+  "request" :
+    {
+      "uri" : "/redirect"
+    },
+  "redirectTo" : "http://www.github.com"
+}
+```
+
+### Cookie
+Cookie can also be in the response.
+
+```
+{
+	"request" :
+		{
+			"uri" : "/cookie",
+			"method" : "get"
+		},
+	"response" :
+		{
+			"text" : "cookie",
+			"cookies" : {"foo" : "bar"}
+		}
+}
+```	
+### Latency
+Sometimes, we need a latency to simulate slow server side operation.
+
+{
+  "request" :
+    {
+      "text" : "foo"
+    },
+  "response" :
+    {
+      "latency" : 1s
+    }
+}
+
+Above response will delay 1s before return.
+
