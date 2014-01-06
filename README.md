@@ -298,7 +298,7 @@ You can define your request uri as a regexp using the ruby %r[] syntax.
 
 ---------------------------------------
 
-Request
+Response
 --------
 
 ### Content
